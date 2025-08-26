@@ -1,0 +1,67 @@
+id: sigmf_sigmfSink
+label: sigmf file sink
+category: '[sigmf]'
+
+templates:
+  imports: |-
+    from gnuradio import sigmf
+    from gnuradio import blocks
+    import numpy as np
+  make: sigmf.sigmfSink(
+            item_size=${type.size},
+            filename=${filename},
+            sample_rate=${sample_rate},
+            center_freq=${center_freq},
+            author=${author},
+            description=${description},
+            hw_info=${hw_info},
+            is_complex=${type.complex})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#     * default
+parameters:
+-   id: filename
+    label: File Name
+    dtype: file_save
+-   id: type
+    label: Stream Type
+    dtype: enum
+    options: [complex float (fc32_le), real float (rc32_le), complex short (sc16_le), real short (rc16_le)]
+    option_labels: [complex float (cf32_le), real float (rf32_le), complex short (ci16_le), real short (ri16_le)]
+    option_attributes:
+        type: [complex, float, short, short]
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_short, gr.sizeof_short]
+        complex: [True, False, True, False]
+    hide: part
+-   id: sample_rate
+    label: Sample Rate
+    dtype: float
+    default: samp_rate
+-   id: center_freq
+    label: Center Frequency
+    dtype: float
+    options: [np.nan]
+    option_labels: ['None']
+-   id: author
+    label: Author
+    dtype: string
+    default: ''
+-   id: description
+    label: Description
+    dtype: string
+    default: ''
+-   id: hw_info
+    label: Hardware Info
+    dtype: string
+    default: ''
+inputs:
+-   domain: stream
+    dtype: ${ type.type }
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1
